@@ -1,0 +1,67 @@
+/*@import url(https://fonts.googleapis.com/css?family=Roboto:400,900);*/
+
+h3 {
+  margin-top: 4px;
+  margin-bottom: 0;
+  font-size: 20px;
+}
+      
+.panel {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.row {
+  color: #fff;
+  font-family: 'Roboto', sans-serif;
+  /*font-weight: 900;*/
+  background-color: #337AB7;
+}
+
+#section {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 900;
+  position: absolute;
+  font-size: 900%;
+  top: 40%;
+  right: 30%;
+  color: #337AB7;
+}
+
+#timer {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  position: absolute;
+  font-size: 500%;
+  top: 50%;
+  right: 40%;
+  color: #000000;
+}
+
+a:link {
+  color:#fff;
+  text-decoration:none;
+  font-family: 'Roboto', sans-serif;
+  /*font-weight: 900;*/
+  font-size: 20px;
+}
+
+a:visited {
+  color:#fff;
+  text-decoration:none;
+  font-family: 'Roboto', sans-serif;
+  /*font-weight: 900;*/
+}
+
+a:hover {
+  text-decoration:none;
+}
+
+#bottom-line {
+  position: absolute;
+  bottom: 0%;
+  height: 1%;
+  width: 100%;
+  background-color: #337AB7;
+}
