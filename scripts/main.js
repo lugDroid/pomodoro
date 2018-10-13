@@ -1,4 +1,6 @@
-// constructor function for presets
+// ### CONSTRUCTOR FUNCTIONS ###
+
+// presets
 function Preset(id, defaultValue) {
   this.id = id;
   this.value = defaultValue;
@@ -27,45 +29,92 @@ Preset.prototype.update = function() {
   document.getElementById(this.id).innerHTML = this.value;
 };
 
+// timer
+function Timer() {
+  var running;
+  var interval;
+}
+
+Timer.prototype.isRunning = function() {
+  return this.running; 
+};
+
+Timer.prototype.start = function() {
+  this.running = true;
+  console.log('timer started');
+  this.interval = setInterval(function() {
+    console.log('timer running');}, 1000);
+};
+
+Timer.prototype.pause = function() {
+  this.running = false;
+  clearInterval(this.interval);
+  console.log('timer stopped');
+};
+
+Timer.prototype.update = function() {
+  console.log('timer running');
+};
+
+// ### MODEL VIEW ###
+
 // Model
 function Model() {
   this.pomodoroPreset = new Preset('pomodoro', 25);
   this.restPreset = new Preset('rest', 5);
+  this.timer = new Timer();
 }
 
 // View
 function View(model) {
   this.model = model;
+  var self = this;
+
+  // get page elements
   this.incPomBtn = document.getElementById('add-pom-btn');
   this.decPomBtn = document.getElementById('sub-pom-btn');
   this.incRestBtn = document.getElementById('add-rest-btn');
   this.decRestBtn = document.getElementById('sub-rest-btn');
   this.pomPreset = document.getElementById('pomodoro');
   this.restPreset = document.getElementById('rest');
+  this.startBtn = document.getElementById('start-stop');
 
+  // update view
   this.update = function() {
-    this.pomPreset.innerHTML = model.pomodoroPreset.getValue();
-    this.restPreset.innerHTML = model.restPreset.getValue();
+    this.pomPreset.innerHTML = this.model.pomodoroPreset.getValue();
+    this.restPreset.innerHTML = this.model.restPreset.getValue();
   };
 
+  // preset buttons events
   this.incPomBtn.onclick = function(e) {
-    model.pomodoroPreset.inc();
-    view.update();
+    self.model.pomodoroPreset.inc();
+    self.update();
   };
 
   this.decPomBtn.onclick = function(e) {
-    this.model.pomodoroPreset.dec();
-    this.update();
+    self.model.pomodoroPreset.dec();
+    self.update();
   };
 
    this.incRestBtn.onclick = function(e) {
-    this.model.rest.Preset.inc();
-    this.update();
+    self.model.restPreset.inc();
+    self.update();
   };
 
   this.decRestBtn.onclick = function(e) {
-    this.model.rest.Preset.dec();
-    this.update();
+    self.model.restPreset.dec();
+    self.update();
+  };
+
+  // start button event
+  this.startBtn.onclick = function(e) {
+    if (!self.model.timer.isRunning()) {
+      self.model.timer.start();
+      e.target.innerHTML = 'PAUSE';
+    } else {
+      self.model.timer.pause();
+      e.target.innerHTML = 'START';
+    }
   };
 }
 
@@ -74,28 +123,3 @@ var model = new Model();
 var view = new View(model);
 
 view.update();
-
-/*// constructor function for preset buttons
-function Button(id, presetObj, type, change) {
-  document.getElementById(id).onclick = function(e) {
-    if (type === 'add') {
-      presetObj.inc();
-    } else {
-      presetObj.dec();
-    }
-
-    presetObj.update();
-  };
-}
-
-var pomPreset = new Preset('pomodoro', 25);
-var restPreset = new Preset('rest', 5);
-
-pomPreset.update();
-restPreset.update();
-
-var addPomBtn = new Button('add-pom-btn', pomPreset, 'add', 5);
-var subPomBtn = new Button('sub-pom-btn', pomPreset, 'sub', 5);
-
-var addRestBtn = new Button('add-rest-btn', restPreset, 'add', 5);
-var subRestBtn = new Button('sub-rest-btn', restPreset, 'sub', 5);*/

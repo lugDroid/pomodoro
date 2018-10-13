@@ -109,43 +109,6 @@ $(document).ready(function() {
   setTimer($('#pomodoro').html() * MIN_TO_MSECONDS);
 });
 
-/* ######### buttons code ########## */
-function updateValue(element, change, limit) {
-  var oldValue = parseInt($(element).html());
-  var newValue = oldValue;
-  if (((change > 0) && (oldValue < limit)) || ((change < 0) && (oldValue > limit))) {
-    newValue = newValue + change;
-  }
-  $(element).html(newValue);
-  return newValue;
-}
 
-// subtract pomodoro time button
-$('#sub-pom-btn').click(function() {
-  if (timerInterval == undefined) {
-    setTimer(updateValue('#pomodoro', -5, 5) * MIN_TO_MSECONDS);
-  }
-});
-
-// add pomodoro time button
-$('#add-pom-btn').click(function() {
-  if (timerInterval == undefined) {
-    setTimer(updateValue('#pomodoro', 5, 55) * MIN_TO_MSECONDS);
-  }
-});
-
-// subtract rest time button
-$('#sub-rest-btn').click(function() {
-  if (timerInterval == undefined) {
-    updateValue('#rest', -1, 1);
-  }
-});
-
-// add rest time button
-$('#add-rest-btn').click(function() {
-  if (timerInterval == undefined) {
-    updateValue('#rest', 1, 15);
-  }
-});
   
 
