@@ -42,8 +42,7 @@ Timer.prototype.isRunning = function() {
 Timer.prototype.start = function() {
   this.running = true;
   console.log('timer started');
-  this.interval = setInterval(function() {
-    console.log('timer running');}, 1000);
+  this.interval = setInterval(this.update, 1000);
 };
 
 Timer.prototype.pause = function() {
