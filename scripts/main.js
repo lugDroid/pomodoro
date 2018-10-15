@@ -1,124 +1,131 @@
-// ### CONSTRUCTOR FUNCTIONS ###
+(function() {
+  'use strict';
 
-// presets
-function Preset(id, defaultValue) {
-  this.id = id;
-  this.value = defaultValue;
-  this.MIN = 5;
-  this.MAX =55;
-  this.CHANGE = 5;
-}
+  // PRESETS MODULE
+  function Preset(id, addButtonId, subButtonId, defaultValue) {
+    var value = defaultValue;
+    var MIN = 5;
+    var MAX = 55;
+    var CHANGE = 5;
+    var addBtn = document.getElementById(addButtonId);
+    var subBtn = document.getElementById(subButtonId);
 
-Preset.prototype.inc = function() {
-  if (this.value < this.MAX) {
-    this.value += this.CHANGE;
-  }
-};
+    // buttons events
+    addBtn.onclick = function(e) {
+      increment();
+      update();
+    };
 
-Preset.prototype.dec = function() {
-  if (this.value > this.MIN) {
-    this.value -= this.CHANGE;
-  }
-};
+    subBtn.onclick = function(e) {
+      decrement();
+      update();
+    };
 
-Preset.prototype.getValue = function() {
-  return this.value;
-};
-
-Preset.prototype.update = function() {
-  document.getElementById(this.id).innerHTML = this.value;
-};
-
-// timer
-function Timer() {
-  var running;
-  var interval;
-}
-
-Timer.prototype.isRunning = function() {
-  return this.running; 
-};
-
-Timer.prototype.start = function() {
-  this.running = true;
-  console.log('timer started');
-  this.interval = setInterval(this.update, 1000);
-};
-
-Timer.prototype.pause = function() {
-  this.running = false;
-  clearInterval(this.interval);
-  console.log('timer stopped');
-};
-
-Timer.prototype.update = function() {
-  console.log('timer running');
-};
-
-// ### MODEL VIEW ###
-
-// Model
-function Model() {
-  this.pomodoroPreset = new Preset('pomodoro', 25);
-  this.restPreset = new Preset('rest', 5);
-  this.timer = new Timer();
-}
-
-// View
-function View(model) {
-  this.model = model;
-  var self = this;
-
-  // get page elements
-  this.incPomBtn = document.getElementById('add-pom-btn');
-  this.decPomBtn = document.getElementById('sub-pom-btn');
-  this.incRestBtn = document.getElementById('add-rest-btn');
-  this.decRestBtn = document.getElementById('sub-rest-btn');
-  this.pomPreset = document.getElementById('pomodoro');
-  this.restPreset = document.getElementById('rest');
-  this.startBtn = document.getElementById('start-stop');
-
-  // update view
-  this.update = function() {
-    this.pomPreset.innerHTML = this.model.pomodoroPreset.getValue();
-    this.restPreset.innerHTML = this.model.restPreset.getValue();
-  };
-
-  // preset buttons events
-  this.incPomBtn.onclick = function(e) {
-    self.model.pomodoroPreset.inc();
-    self.update();
-  };
-
-  this.decPomBtn.onclick = function(e) {
-    self.model.pomodoroPreset.dec();
-    self.update();
-  };
-
-   this.incRestBtn.onclick = function(e) {
-    self.model.restPreset.inc();
-    self.update();
-  };
-
-  this.decRestBtn.onclick = function(e) {
-    self.model.restPreset.dec();
-    self.update();
-  };
-
-  // start button event
-  this.startBtn.onclick = function(e) {
-    if (!self.model.timer.isRunning()) {
-      self.model.timer.start();
-      e.target.innerHTML = 'PAUSE';
-    } else {
-      self.model.timer.pause();
-      e.target.innerHTML = 'START';
+    function increment() {
+      if (value < MAX) {
+        value += CHANGE;
+      }
     }
-  };
-}
 
-// Main
-var model = new Model();
-var view = new View(model);
+    function decrement() {
+      if (value > MIN) {
+        value -= CHANGE;
+      }
+    }
 
-view.update();
+    function update() {
+      document.getElementById(id).innerHTML = value;
+    }
+
+    var publicAPI = {
+      value: value,
+      update: update
+    };
+
+    return publicAPI;
+  }
+
+  // TIMER MODULE
+  // preset and cycle in ms
+  function Timer(preset, cycle, startBtnId, timerId) {
+    var running;
+    var interval;
+    var value = preset;
+    var startBtn = document.getElementById(startBtnId);
+    var timer = document.getElementById(timerId);
+
+    // start button event
+    startBtn.onclick = function(e) {
+      if (!running) {
+        start();
+        e.target.innerHTML = 'PAUSE';
+      } else {
+        pause();
+        e.target.innerHTML = 'START';
+      }
+    };
+
+    function start() {
+      running = true;
+      interval = setInterval(update, cycle);
+    }
+
+    function pause() {
+      running = false;
+      clearInterval(interval);
+    }
+
+    function update() {
+      if (running) {
+        value = value - cycle;
+        timer.innerHTML = getMinutes() + ':' + getSeconds();
+      }
+    }
+
+    function isFinished() {
+      if (value == 0 && running) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    function getMinutes() {
+      return pad(Math.trunc(value / 60000), 2);
+    }
+
+    function getSeconds() {
+      return pad(value % 60000 / 1000, 2);
+    }
+
+    function pad(num, length) {
+      var str = num +  '';
+      while (str.length < length) {
+        str = '0' + str;
+      }
+
+      return str;
+    }
+
+    var publicAPI = {
+      running: running,
+      start: start,
+      pause: pause,
+      update: update,
+      isFinished: isFinished,
+      getMinutes: getMinutes,
+      getSeconds: getSeconds
+    };
+
+    return publicAPI;
+  }
+
+  // MAIN
+  var pomodoroPreset = Preset('pomodoro', 'add-pom-btn', 'sub-pom-btn', 25);
+  var restPreset = Preset('rest', 'add-rest-btn', 'sub-rest-btn', 5);
+  var timer = Timer(pomodoroPreset.value * 60000, 1000, 'start-stop', 'timer');
+
+  pomodoroPreset.update();
+  restPreset.update();
+
+})();
