@@ -63,6 +63,10 @@
 
     // Private variables
     var running;
+    var pomRunning;
+    var restRunning;
+    var pomTime;
+    var restTime;
     var interval;
     var value;
     var cycle;
@@ -74,10 +78,13 @@
       element = document.getElementById(timerId);
     };
 
-    var start = function(preset) {
-      value = preset;
+    var start = function(pomPreset, restPreset) {
+      pomTime = pomPreset;
+      restTime = restPreset;
+      value = pomTime;
       running = true;
-      interval = setInterval(update, cycle);
+      pomRunning = true;
+      interval = setInterval(update.bind(this), cycle);
     };
 
     var pause = function() {
@@ -86,9 +93,17 @@
     };
 
     var update = function() {
-      if (timer.isRunning() && !timer.isFinished()) {
-        timer.setValue(timer.getValue() - timer.getCycle());
-        element.innerHTML = timer.getMinutes() + ':' + timer.getSeconds();
+      if (isRunning && !isFinished()) {
+        value = value - cycle;
+        element.innerHTML = getMinutes() + ':' + getSeconds();
+      } else if (isFinished() && pomRunning) {
+        value = restTime;
+        pomRunning = false;
+        restRunning = true;
+      } else if (isFinished() && restRunning) {
+        value = pomTime;
+        pomRunning = true;
+        restRunning = false;
       }
     };
 
@@ -133,6 +148,22 @@
       return cycle;
     };
 
+    var setPomRunning = function() {
+      pomRunning = true;
+    };
+
+    var setRestRunning = function() {
+      pomRunning = true;
+    };
+
+    var resetPomRunning = function() {
+      pomRunning = false;
+    };
+
+    var resetRestRunning = function() {
+      pomRunning = false;
+    };
+
     // Public API
     return {
       isRunning: isRunning,
@@ -145,7 +176,11 @@
       getSeconds: getSeconds,
       getValue: getValue,
       setValue: setValue,
-      getCycle: getCycle
+      getCycle: getCycle,
+      setPomRunning: setPomRunning,
+      setRestRunning: setRestRunning,
+      resetPomRunning: resetPomRunning,
+      resetRestRunning: resetRestRunning
     };
   }
 
@@ -165,7 +200,7 @@
   // Start button event
   startBtn.onclick = function(e) {
     if (!timer.running) {
-      timer.start(pomodoroPreset.getValue() * 60000);
+      timer.start(pomodoroPreset.getValue() * 60000, restPreset.getValue() * 60000);
       e.target.innerHTML = 'PAUSE';
     } else {
       timer.pause();
