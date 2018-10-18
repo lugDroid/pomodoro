@@ -1,5 +1,5 @@
-(function() {
-  'use strict';
+//(function() {
+//  'use strict';
 
   // PRESETS MODULE
   function Preset(id, addButtonId, subButtonId) {
@@ -70,12 +70,15 @@
     var interval;
     var value;
     var cycle;
-    var element;
+    var countdown;
+    var title;
 
     // Functions
-    var init = function(newCycle, timerId) {
+    var init = function(newCycle, countdownId, titleId) {
       cycle = newCycle;
-      element = document.getElementById(timerId);
+      countdown = document.getElementById(countdownId);
+      title = document.getElementById(titleId);
+      running = false;
     };
 
     var start = function(pomPreset, restPreset) {
@@ -87,23 +90,25 @@
       interval = setInterval(update.bind(this), cycle);
     };
 
-    var pause = function() {
-      running = false;
+    var stop = function() {
       clearInterval(interval);
+      running = false;
     };
 
     var update = function() {
-      if (isRunning && !isFinished()) {
+      if (running && !isFinished()) {
         value = value - cycle;
-        element.innerHTML = getMinutes() + ':' + getSeconds();
+        countdown.innerHTML = getMinutes() + ':' + getSeconds();
       } else if (isFinished() && pomRunning) {
         value = restTime;
         pomRunning = false;
         restRunning = true;
+        title.innerHTML = 'REST';
       } else if (isFinished() && restRunning) {
         value = pomTime;
         pomRunning = true;
         restRunning = false;
+        title.innerHTML = 'POMODORO';
       }
     };
 
@@ -136,51 +141,12 @@
       return str;
     };
 
-    var getValue = function() {
-      return value;
-    };
-
-    var setValue = function(newValue) {
-      value = newValue;
-    };
-
-    var getCycle = function() {
-      return cycle;
-    };
-
-    var setPomRunning = function() {
-      pomRunning = true;
-    };
-
-    var setRestRunning = function() {
-      pomRunning = true;
-    };
-
-    var resetPomRunning = function() {
-      pomRunning = false;
-    };
-
-    var resetRestRunning = function() {
-      pomRunning = false;
-    };
-
     // Public API
     return {
       isRunning: isRunning,
       init: init,
       start: start,
-      pause: pause,
-      update: update,
-      isFinished: isFinished,
-      getMinutes: getMinutes,
-      getSeconds: getSeconds,
-      getValue: getValue,
-      setValue: setValue,
-      getCycle: getCycle,
-      setPomRunning: setPomRunning,
-      setRestRunning: setRestRunning,
-      resetPomRunning: resetPomRunning,
-      resetRestRunning: resetRestRunning
+      stop: stop
     };
   }
 
@@ -191,7 +157,7 @@
   var startBtn = document.getElementById('start-stop');
 
   // Initialize timer
-  timer.init(1000, 'timer');
+  timer.init(1000, 'timer-countdown', 'timer-title');
 
   // Initialize presets with defaults values
   pomodoroPreset.init(25);
@@ -199,13 +165,13 @@
 
   // Start button event
   startBtn.onclick = function(e) {
-    if (!timer.running) {
+    if (!timer.isRunning()) {
       timer.start(pomodoroPreset.getValue() * 60000, restPreset.getValue() * 60000);
-      e.target.innerHTML = 'PAUSE';
+      e.target.innerHTML = 'STOP';
     } else {
-      timer.pause();
+      timer.stop();
       e.target.innerHTML = 'START';
     }
   };
 
-})();
+//})();

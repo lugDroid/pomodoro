@@ -19,7 +19,7 @@ h3 {
   background-color: #337AB7;
 }
 
-#section {
+#timer-title {
   font-family: 'Roboto', sans-serif;
   font-weight: 900;
   position: absolute;
@@ -29,7 +29,7 @@ h3 {
   color: #337AB7;
 }
 
-#timer {
+#timer-countdown {
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
   position: absolute;
