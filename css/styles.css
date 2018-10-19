@@ -1,42 +1,72 @@
 /*@import url(https://fonts.googleapis.com/css?family=Roboto:400,900);*/
 
-html {
-/*  height: 100%;*/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
   font-family: 'Roboto', sans-serif;
-/*  height: 100%;
-  width: 100%;
-  margin: 0;*/
+  background-color: #f4f4f4;
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
+
 }
 
 .top-panel {
-  color: #fff;
   background-color: #337AB7;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
+  color: #fff;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .container {
-  max-width: 500px;
+  width: 60%;
+  height: 100%;
   margin: 0 auto;
 }
 
-.presets a {
-  margin: 0 10px;
+.top-panel p {
+  display: inline-block;
+  margin: 3px 2%;
 }
 
-.presets h3 {
-  display: inline;
-  margin: 0 10px;
+.top-panel a {
+  margin: 3px 2%;
 }
 
-.start-btn {
-  width: 200px;
+#pomodoro-preset {
+  float: left;
+  width: 30%;
 }
+
+#start-stop {
+  display: inline-block;
+}
+
+#rest-preset {
+  float: right;
+  width: 30%;
+}
+
+@media(max-width: 600px) {
+  #pomodoro-preset {
+    width: 100%;
+    float: none;
+  }
+
+  #rest-preset {
+    width: 100%;
+    float: none;
+  }
+}
+
+/* Old styles */
 
 /*
 h3 {
