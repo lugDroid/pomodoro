@@ -11,6 +11,7 @@
     var CHANGE = 5;
     var addBtn = document.getElementById(addButtonId);
     var subBtn = document.getElementById(subButtonId);
+    var valueChangeSuscribers = [];
 
     // Buttons events
     addBtn.onclick = function(e) {
@@ -27,18 +28,21 @@
     var init = function(defaultValue) {
       value = defaultValue;
       update();
+      valueChangeNotify();
     };
 
     var increment = function() {
       if (value < MAX) {
         value += CHANGE;
       }
+      valueChangeNotify();
     };
 
     var decrement = function() {
       if (value > MIN) {
         value -= CHANGE;
       }
+      valueChangeNotify();
     };
 
     var update = function() {
@@ -49,11 +53,22 @@
       return value;
     };
 
+    var valueChangeSuscribe = function(suscriber) {
+      valueChangeSuscribers.push(suscriber);
+    };
+
+    var valueChangeNotify = function() {
+      valueChangeSuscribers.forEach(function(f) {
+        f(value);
+      });
+    };
+
     // Public API
     return {
       getValue: getValue,
       init: init,
-      update: update
+      update: update,
+      valueChangeSuscribe: valueChangeSuscribe
     };
   }
 
@@ -141,12 +156,18 @@
       return str;
     };
 
+    var updateValue = function(newValue) {
+      value = newValue * 60000;
+      countdown.innerHTML =  getMinutes() + ':' + getSeconds();
+    };
+
     // Public API
     return {
       isRunning: isRunning,
       init: init,
       start: start,
-      stop: stop
+      stop: stop,
+      updateValue: updateValue
     };
   }
 
@@ -159,9 +180,14 @@
   // Initialize timer
   timer.init(1000, 'timer-countdown', 'timer-title');
 
+  // Subscribe timer as listener for changes on preset value
+  pomodoroPreset.valueChangeSuscribe(timer.updateValue);
+
   // Initialize presets with defaults values
   pomodoroPreset.init(25);
   restPreset.init(5);
+
+
 
   // Start button event
   startBtn.onclick = function(e) {
