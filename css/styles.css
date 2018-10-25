@@ -59,19 +59,21 @@ a:hover {
 
 #timer-title {
   font-weight: 900;
+  font-size: 10vw;
   position: absolute;
-  font-size: 900%;
-  top: 40%;
-  right: 30%;
+  top: 35vh;
+  right: 30vw;
   color: #337AB7;
+/*  text-align: center;
+  margin-top: 15vw;*/
 }
 
 #timer-countdown {
   font-weight: 400;
+  font-size: 5vw;
   position: absolute;
-  font-size: 500%;
-  top: 50%;
-  right: 40%;
+  top: 34vh;
+  left: 50vw;
   color: #000000;
 }
 
@@ -84,6 +86,10 @@ a:hover {
   #rest-preset {
     width: 100%;
     float: none;
+  }
+
+  #timer-countdown {
+    top: 35vh;
   }
 }
 
