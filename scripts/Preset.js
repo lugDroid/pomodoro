@@ -8,8 +8,6 @@
   and two buttons to increment and decrement that value  
 */
 
-/* to be moved into main when finished */
-
 
 class Preset {
   constructor(_value, _element) {

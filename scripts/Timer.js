@@ -9,7 +9,7 @@ class Timer {
 	constructor(_cycle, _element) {
 		this.cycle = _cycle;
 		this.running = false;
-		this.elements = _element.childre;
+		this.elements = _element.children;
 
 		this.countdown = this.elements.items(0);
 		this.title = this.elements.items(1);
@@ -44,5 +44,39 @@ class Timer {
 			this.restRunning = false;
 			this.title.innerHTML = 'POMODORO';
 		}
+	}
+
+	isFinished() {
+		if (this.value == 0 && this.running) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	isRunning() {
+		return running;
+	}
+
+	getMinutes() {
+		return pad(Math.trunc(value / 60000), 2);
+	}
+
+	getSeconds() {
+		return pad(value % 60000 / 1000, 2);
+	}
+	
+	pad(num, length) {
+		let str = num + '';
+		while (str.length < length) {
+			str = '0' + str;
+		}
+
+		return str;
+	}
+
+	updateValue(newValue) {
+		this.value = newValue * 60000;
+		this.countdown.innerHTML = this.getMinutes() + ':' + this.getSeconds();
 	}
 }
